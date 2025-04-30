@@ -4,7 +4,7 @@ const axios = require('axios');
 const main = async () => {
 
     const timeStart = new Date();
-    try {
+    
         const maxWaitSeconds = 60 * 5;
         const hostname = core.getInput('hostname', {required: true});
         const port = core.getInput('cPanelApiPort', {required: true});
@@ -67,15 +67,6 @@ const main = async () => {
         const duration = new Date() - timeStart;
         core.setOutput("duration", duration);
         core.info(`deployment duration: ${duration}`);
-    } catch (error) {
-        const duration = new Date() - timeStart;
-        const errorBody = error.response?.data;
-        core.info(`failed deployment duration: ${duration}`);
-        core.debug(`errorBody: ${errorBody}`);
-        core.setOutput("duration", duration);
-
-        core.setFailed(error.message + (errorBody == null ? "" : `\n${errorBody}` ));
-    }
 };
 
 main();
