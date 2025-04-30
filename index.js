@@ -31,10 +31,7 @@ const main = async () => {
             });
             updateRes = updateRes.data;
             core.debug(`updateRes: ${JSON.stringify(updateRes, null, 2)}`);
-            if (updateRes.errors !== null) {
-                // noinspection ExceptionCaughtLocallyJS
-                throw new Error(updateRes.errors);
-            }
+          
         }
 
         let startDeployRes = await axios.get(createDeploymentTaskEndpoint, {
@@ -43,30 +40,6 @@ const main = async () => {
             },
             headers: {"Authorization": `cpanel ${cpanel_username}:${cpanel_token}`}
         });
-        startDeployRes = startDeployRes.data;
-        core.debug(`startDeployRes: ${JSON.stringify(startDeployRes, null, 2)}`);
-        if (startDeployRes.errors !== null) {
-            // noinspection ExceptionCaughtLocallyJS
-            throw new Error("Failed to start deployment task: " + JSON.stringify(startDeployRes.errors, null, 2));
-        }
-       
-
-        for (let i=0; i<maxWaitSeconds; i++) {
-            core.info(`polling iteration ${i}`);
-            let pollRes = await axios.get(getDeploymentStatusEndpoint, {
-                headers: {"Authorization": `cpanel ${cpanel_username}:${cpanel_token}`}
-            });
-            pollRes = pollRes.data;
-            if (pollRes.errors != null){
-
-            }
-            //not failed nor success - wait
-            await new Promise(r => setTimeout(r, 1000));
-        }
-        
-        const duration = new Date() - timeStart;
-        core.setOutput("duration", duration);
-        core.info(`deployment duration: ${duration}`);
 };
 
 main();
