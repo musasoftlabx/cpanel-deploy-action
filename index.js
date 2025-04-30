@@ -49,11 +49,7 @@ const main = async () => {
             // noinspection ExceptionCaughtLocallyJS
             throw new Error("Failed to start deployment task: " + JSON.stringify(startDeployRes.errors, null, 2));
         }
-        const taskId = 1;
-        if (!taskId) {
-            // noinspection ExceptionCaughtLocallyJS
-            throw new Error("Failed to start deployment task - task_id = " + taskId);
-        }
+       
 
         for (let i=0; i<maxWaitSeconds; i++) {
             core.info(`polling iteration ${i}`);
@@ -64,21 +60,7 @@ const main = async () => {
             if (pollRes.errors != null){
 
             }
-            const taskData = pollRes.data.filter( info => info.task_id === taskId )[0];
-            if (taskData.timestamps.succeeded != null) {
-                core.info(`task succeeded at ${taskData.timestamps.succeeded}`);
-                break;
-            }
-            if (taskData.timestamps.failed != null) {
-                core.info(`task failed at ${taskData.timestamps.failed}`);
-                core.info(`errors: ${pollRes.errors}`);
-                core.info(`messages: ${pollRes.messages}`);
-                core.debug(`latest poll result: ${pollRes}`);
-                // noinspection ExceptionCaughtLocallyJS
-                throw new Error(`Task failed to deploy. errors: ${pollRes.errors}`);
-            }
             //not failed nor success - wait
-            core.debug(`task ${taskId} still running. taskData: ${JSON.stringify(taskData, null, 2)}`);
             await new Promise(r => setTimeout(r, 1000));
         }
         
