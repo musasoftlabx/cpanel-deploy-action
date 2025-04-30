@@ -7854,8 +7854,8 @@ const main = async () => {
                 headers: {"Authorization": `cpanel ${cpanel_username}:${cpanel_token}`}
             });
             pollRes = pollRes.data;
-            if (pollRes.errors != null){
-
+            if (pollRes.errors === null){
+                break;
             }
            
             //not failed nor success - wait
